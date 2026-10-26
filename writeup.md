@@ -136,7 +136,6 @@ if (req.user.role !== "ta" && req.user.id !== Number(req.params.id)) {
 | Invalid student IDs | Requests returned 400. |
 | Old hardcoded TA password | Login was rejected on the fresh patched database. |
 | Missing or short signing secret | Startup was rejected with a configuration error. |
-| Missing, short, or old initial TA password | Fresh database creation was rejected. |
 | Existing-store loading and password reset | Loading preserved data; resetting the TA password preserved grades and student accounts. |
 | Grade markup and other displayed values | Rendering functions escaped markup as text; ordinary grade text and zero scores remained intact. |
 
