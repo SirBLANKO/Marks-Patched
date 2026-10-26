@@ -12,7 +12,7 @@ Marks is a classroom grade-viewing application built with Express, browser JavaS
 
 ## Steps to reproduce
 
-Use the original, unpatched application with a disposable database and no custom `JWT_SECRET`. These commands target only the local demonstration server.
+Use the original, unpatched application with a disposable database and no custom `JWT_SECRET`.
 
 1. Install its dependencies and start the original application with `npm start`.
 2. Open a second PowerShell window in that original project folder.
