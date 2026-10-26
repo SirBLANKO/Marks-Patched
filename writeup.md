@@ -8,7 +8,7 @@ Marks is a classroom grade-viewing application built with Express, browser JavaS
 
 **Impact:** Someone who knew the default signing secret could forge a token claiming TA privileges, read the section's grades and restricted instructor note, and access the grade-writing endpoint. A separate missing ownership check allowed signed-in students to request other students' grades.
 
-**Live demo:** No hosted Marks URL has been supplied. The results below come from local tests.
+**Live demo:** https://marks-patched-43q1.onrender.com
 
 ## Steps to reproduce
 
