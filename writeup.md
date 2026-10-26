@@ -124,18 +124,6 @@ if (req.user.role !== "ta" && req.user.id !== Number(req.params.id)) {
 }
 ```
 
-### Existing databases
-
-Stop the server and back up the JSON store. Rotate `JWT_SECRET` and reset the old TA password using the same `DATABASE_PATH` as the application:
-
-```powershell
-$env:NEW_TA_PASSWORD = node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"
-$env:NEW_TA_PASSWORD
-node scripts/reset-ta-password.js priya
-```
-
-Save the displayed password privately. The script preserves grades and other accounts. Keep the supplied `scripts/` folder until this step is complete. Source changes alone do not revoke the old stored password.
-
 ## Security and normal functionality checks
 
 The supplied `test/security.test.js` contains 11 automated tests. After installing dependencies, run `npm test` from the patched project folder. Keep the `test/` folder to run these checks.
