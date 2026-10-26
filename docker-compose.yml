@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      DATABASE_PATH: /app/data/marks.json
+      JWT_SECRET: ${JWT_SECRET:?Set a unique random JWT_SECRET of at least 32 bytes}
+      INITIAL_TA_PASSWORD: ${INITIAL_TA_PASSWORD:-}
+    volumes:
+      - marks-data:/app/data
+    restart: unless-stopped
+volumes:
+  marks-data:
