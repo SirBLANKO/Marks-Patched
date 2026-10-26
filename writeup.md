@@ -139,7 +139,7 @@ if (req.user.role !== "ta" && req.user.id !== Number(req.params.id)) {
 | Existing-store loading and password reset | Loading preserved data; resetting the TA password preserved grades and student accounts. |
 | Grade markup and other displayed values | Rendering functions escaped markup as text; ordinary grade text and zero scores remained intact. |
 
-**Verification status:** All 11 tests passed against the patched code. Tests used disposable local stores. HTML checks examined generated output using Node's VM; they were not browser automation tests. No screenshots were captured, and no hosted deployment or full dependency advisory audit was performed.
+**Verification status:** All 10 tests passed against the patched code. Tests used disposable local stores. HTML checks examined generated output using Node's VM; they were not browser automation tests. No screenshots were captured, and no hosted deployment or full dependency advisory audit was performed.
 
 ## Summary
 
