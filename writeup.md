@@ -1,6 +1,6 @@
 # Marks: JWT forgery and broken access control
 
-Marks is a classroom grade-viewing application built with Express, browser JavaScript, and a JSON file store. Students view their own scores; the teaching assistant (TA) can view the section and enter marks.
+Marks is a classroom grade-viewing application built with Express, browser JavaScript, and a JSON file store. Students view their own scores and the teaching assistant can view the section and enter marks.
 
 **Location:** `lib/tokens.js`, the `requireUser()` middleware, and authorization checks in `server.js`.
 
