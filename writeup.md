@@ -126,8 +126,6 @@ if (req.user.role !== "ta" && req.user.id !== Number(req.params.id)) {
 
 ## Security and normal functionality checks
 
-The supplied `test/security.test.js` contains 11 automated tests. After installing dependencies, run `npm test` from the patched project folder. Keep the `test/` folder to run these checks.
-
 | Test | Actual result |
 |---|---|
 | Student login and own marks | Valid sign-in and own-record reads succeeded; an incorrect password was rejected. |
