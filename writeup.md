@@ -144,32 +144,6 @@ Invoke-RestMethod -Uri 'http://localhost:3000/api/section' -Headers $headers
 
 PowerShell reports the expected 403 responses as errors. Before the patch, the second request returned HTTP 200 in the local reproduction.
 
-## Running the patched application
-
-Install Node.js and open PowerShell in the patched folder containing `package.json`. For a **fresh database**, run:
-
-```powershell
-npm.cmd ci
-$env:JWT_SECRET = node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-$env:INITIAL_TA_PASSWORD = node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"
-$env:INITIAL_TA_PASSWORD
-npm.cmd start
-```
-
-Save the displayed TA password privately, then open `http://localhost:3000`.
-
-| Setting | Purpose |
-|---|---|
-| `JWT_SECRET` | Private server key for signing login tokens; not a user login password. |
-| `INITIAL_TA_PASSWORD` | Password for `priya` when the database is first created. |
-| `DATABASE_PATH` | Optional JSON store location. The unchanged local default is `lib/data/marks.json`; Docker uses `/app/data/marks.json`. |
-
-The PowerShell variables last for that terminal session. Save the signing key privately and reuse it if existing login tokens should survive restarts. Changing it invalidates those tokens. Setting a new initial TA password does **not** update an existing account.
-
-Demo student logins remain `maya` / `campus123` and `devon` / `campus123`. Use synthetic grades only: these are shared demonstration accounts. There is no registration page.
-
-Plain `npm start` does not automatically load `.env`. For Docker Compose, fill in a private `.env` based on `.env.example`; for hosting, configure the variables in the service dashboard. Never commit real secrets to GitHub.
-
 ### Existing databases
 
 Stop the server and back up the JSON store. Rotate `JWT_SECRET` and reset the old TA password using the same `DATABASE_PATH` as the application:
