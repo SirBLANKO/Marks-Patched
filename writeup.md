@@ -124,26 +124,6 @@ if (req.user.role !== "ta" && req.user.id !== Number(req.params.id)) {
 }
 ```
 
-## Exact access-control test requests
-
-With a local server running, sign in as the demo student Maya:
-
-```powershell
-$login = Invoke-RestMethod -Method Post -Uri 'http://localhost:3000/api/login' -ContentType 'application/json' -Body '{"username":"maya","password":"campus123"}'
-$headers = @{ Authorization = "Bearer $($login.token)" }
-
-# Own record: expected HTTP 200.
-Invoke-RestMethod -Uri 'http://localhost:3000/api/students/1' -Headers $headers
-
-# Another student's record: expected HTTP 403 after the patch.
-Invoke-RestMethod -Uri 'http://localhost:3000/api/students/2' -Headers $headers
-
-# TA-only section: expected HTTP 403 for this student.
-Invoke-RestMethod -Uri 'http://localhost:3000/api/section' -Headers $headers
-```
-
-PowerShell reports the expected 403 responses as errors. Before the patch, the second request returned HTTP 200 in the local reproduction.
-
 ### Existing databases
 
 Stop the server and back up the JSON store. Rotate `JWT_SECRET` and reset the old TA password using the same `DATABASE_PATH` as the application:
