@@ -4,31 +4,31 @@ This sketch describes the patched application.
 
 ```mermaid
 flowchart TD
-    Browser["Student or TA Browser<br/>Static HTML and JavaScript"]
+    Browser["Student or TA browser<br/>Static HTML, CSS, and JavaScript"]
     Token["Browser localStorage<br/>Login JWT"]
-    Server["Express Server<br/>API Routes and Access Checks"]
-    Auth["JWT Verification<br/>Private Signing Key"]
-    DB[("JSON File Store<br/>Users, Password Hashes, Grades, Section")]
+    Server["Express server<br/>API routes and access checks"]
+    Auth["JWT verification<br/>HS256 signing secret"]
+    DB[("JSON file store<br/>Users, password hashes, grades, and section data")]
 
-    Browser -->|"Save / Read Token"| Token
-    Browser -->|"HTTP API Request<br/>Bearer Token After Login"| Server
-    Server -->|"Verify Token"| Auth
-    Auth -->|"Validated Account ID"| Server
-    Server <-->|"Resolve Current User and Role<br/>Read / Write Grades"| DB
-    Server -->|"JSON API Response"| Browser
-    Server -->|"Serve HTML, JavaScript, and CSS"| Browser
+    Browser -->|"Save / read token"| Token
+    Browser -->|"HTTP API request<br/>Bearer token after login"| Server
+    Server -->|"Verify token"| Auth
+    Auth -->|"Validated account ID"| Server
+    Server <-->|"Resolve current user and role<br/>Read / write grades"| DB
+    Server -->|"JSON API response"| Browser
+    Server -->|"Serve HTML, CSS, and JavaScript"| Browser
 ```
 
-- **Signing in:** The browser submits a username and password to `POST /api/login`. The server finds the account in the JSON store and checks its password hash with bcrypt. Successful login returns a signed JWT and public user information. Browser JavaScript saves the token under `marks_token` in `localStorage`.
+- Signing in: The browser submits a username and password to `POST /api/login`. The server looks up the account in the JSON store and verifies the password hash with bcrypt. On success, it issues a JWT and returns it to the browser.
 
-- **Authentication and permissions:** Later API requests send `Authorization: Bearer <token>`. The shared `requireUser()` middleware verifies the token using the private `JWT_SECRET`, accepts only HS256, validates the account ID, and loads the current account. Access checks use its stored role rather than trusting the token's role claim. Invalid tokens or unknown accounts receive 401.
+- Authentication and permissions: Later API requests include `Authorization: Bearer <token>`. The shared `requireUser()` middleware verifies the token using the server’s `JWT_SECRET`, ensures the requester is authenticated, and enforces role-based access checks on protected routes.
 
-- **Student grade access:** `GET /api/me` returns the signed-in user's grades. `GET /api/students/:id` allows a student to read only their own record; a TA may read any student record. The server validates the requested ID and rejects unauthorized cross-student requests with 403.
+- Student grade access: `GET /api/me` returns the signed-in user’s grades. `GET /api/students/:id` allows a student to read only their own record; a TA may read any student record.
 
-- **TA section and grade entry:** `GET /api/section` returns the section's students, grades, and instructor note only to a current TA. `POST /api/grades` also requires a TA and appends a mark to the JSON store. The existing browser page displays the TA section; grade entry is exposed through the API.
+- TA section and grade entry: `GET /api/section` returns the section’s students, grades, and instructor note only to a current TA. `POST /api/grades` also requires TA privileges and appends a mark to the JSON store.
 
-- **Page rendering:** Express serves `public/index.html`, `public/app.js`, and CSS. The browser fetches JSON and builds the student or TA display. Dynamic text is HTML-escaped before insertion into the page, so grade titles and other displayed values are treated as text. This application uses neither EJS templates nor SQLite.
+- Page rendering: Express serves `public/index.html`, `public/app.js`, and the CSS files. The browser fetches JSON from the API and renders the appropriate student or TA interface. Dynamic text is HTML-escaped before insertion into the page to reduce the risk of injection.
 
-- **Storage and setup:** `lib/store.js` reads and writes users, bcrypt password hashes, grades, and section information in one JSON file. `DATABASE_PATH` overrides the original local default, `lib/data/marks.json`; Docker uses `/app/data/marks.json`. A fresh store requires a private `INITIAL_TA_PASSWORD` for the TA account. Existing credentials are changed only through an explicit reset. Persistent hosting storage is needed to retain changes across redeploys.
+- Storage and setup: `lib/store.js` reads and writes users, bcrypt password hashes, grades, and section information in a single JSON file. `DATABASE_PATH` overrides the default local file path, allowing the app to use a different storage location when deployed.
 
-- **Signing out:** Browser JavaScript removes the token from `localStorage` and returns to the sign-in view. This removes that browser's saved token; it does not revoke copies elsewhere. Tokens expire after seven days, and rotating `JWT_SECRET` invalidates tokens signed with the previous key.
+- Signing out: Browser JavaScript removes the token from `localStorage` and returns the user to the sign-in view. This clears the browser’s stored token, but it does not revoke any copies that may already exist elsewhere. Tokens expire according to the configured JWT lifetime.
