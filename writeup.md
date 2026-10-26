@@ -113,7 +113,7 @@ if (req.user.role !== "ta") {
 | Location | Original problem | Change |
 |---|---|---|
 | `server.js`, `/api/students/:id` | Any signed-in student could retrieve another student's grades. | Require the requested ID to match the current user, unless the current user is a TA. Validate the ID before lookup. |
-| `lib/store.js` | A fixed TA password was embedded in the seed data. | Require a private `INITIAL_TA_PASSWORD` for new databases; provide an explicit reset script for existing ones. |
+| `lib/store.js` | A fixed TA password was embedded in the seed data. | Require a private `INITIAL_TA_PASSWORD` for new databases. |
 | `public/app.js` | Grade titles and other values were inserted into HTML without encoding. | Escape dynamic text before HTML insertion, including data already stored in the JSON file. |
 
 The student-record endpoint now includes:
